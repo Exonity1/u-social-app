@@ -11,10 +11,10 @@ Als neue Nutzerin möchte ich mich mit E-Mail und Passwort registrieren und
 einloggen, damit ich in die App komme und alle Komponenten (App, Auth,
 Datenbank, Tests, CI) einmal durchlaufen werden.
 
-- [ ] Nach der Registrierung legt ein Trigger automatisch ein Profil in `profiles` an; der Startscreen zeigt den Anzeigenamen.
-- [ ] Login, Logout und das Wiederherstellen der Sitzung nach einem App-Neustart funktionieren.
-- [ ] Ein Befehl aus dem README startet die App lokal; Lint, Jest und `supabase test db` sind grün.
-- [ ] Pipeline (Lint + Tests) ist grün
+- [x] Nach der Registrierung legt ein Trigger automatisch ein Profil in `profiles` an; der Startscreen zeigt den Anzeigenamen.
+- [x] Login, Logout und das Wiederherstellen der Sitzung nach einem App-Neustart funktionieren.
+- [x] Ein Befehl aus dem README startet die App lokal; Lint, Jest und `supabase test db` sind grün.
+- [x] Pipeline (Lint + Tests) ist grün
 
 ## 1 -- Profil bearbeiten
 
