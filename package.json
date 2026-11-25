@@ -40,18 +40,21 @@
     "typescript": "~6.0.3"
   },
   "scripts": {
-    "dev": "supabase start && expo start",
+    "dev": "expo start",
+    "usb": "adb reverse tcp:54321 tcp:54321 && adb reverse tcp:8081 tcp:8081",
+    "dev:usb": "npm run usb && expo start --localhost",
     "start": "expo start",
     "android": "expo start --android",
     "web": "expo start --web",
     "lint": "expo lint",
     "typecheck": "tsc --noEmit",
     "test": "jest",
-    "db:start": "supabase start",
+    "db:start": "supabase start && node scripts/write-env-local.mjs",
+    "env:local": "node scripts/write-env-local.mjs",
     "db:stop": "supabase stop",
     "db:reset": "supabase db reset",
     "db:test": "supabase test db",
-    "check": "npm run lint && npm run typecheck && npm test && npm run db:test"
+    "check": "npm run lint && npm run typecheck && npm test"
   },
   "private": true,
   "jest": {

@@ -18,7 +18,7 @@ flowchart TD
     DB --- Rules["Fachregeln<br/>SQL-Funktionen, RLS-Policies, Trigger"]
     Storage -->|Storage-Policies nutzen Regeln| Rules
     Cron[pg_cron] -->|Aufräumen| DB
-    Tests["pgTAP-Tests<br/>(supabase test db, lokal per Docker)"] -.prüfen.-> Rules
+    Tests["pgTAP-Tests<br/>(supabase test db in der CI)"] -.prüfen.-> Rules
     Jest["Jest-Tests"] -.prüfen.-> App
 ```
 
@@ -72,8 +72,8 @@ Ausblenden. Zeitabhängige Funktionen bekommen einen Parameter `p_now` (Standard
 | --- | --- |
 | Sprache | TypeScript (App), SQL / PL/pgSQL (Fachregeln) |
 | Framework | Expo (React Native) mit Expo Router |
-| Datenbank | Supabase (Postgres, Auth, Storage, Realtime) |
-| Tests | pgTAP über `supabase test db` (lokal per Docker), Jest für UI-Logik |
+| Datenbank | Supabase (Postgres, Auth, Storage, Realtime): lokal per Docker zum Entwickeln, ein Cloud-Projekt in Frankfurt mit dem Stand von `main` |
+| Tests | pgTAP über `supabase test db` in der CI (optional lokal per Docker), Jest für UI-Logik |
 | Linter/Formatter | ESLint, Prettier |
 | CI | GitHub Actions |
 | Build | EAS Build (APK) |
@@ -95,3 +95,11 @@ Ausblenden. Zeitabhängige Funktionen bekommen einen Parameter `p_now` (Standard
 | 08.11.2026 | Supabase-CLI als devDependency | Gleiche Version für Team und CI | Globale Installation |
 | 08.11.2026 | Repository auf GitHub, CI über GitHub Actions | Mit dem Dozenten abgesprochen | Nordakademie-GitLab mit `.gitlab-ci.yml` |
 | 08.11.2026 | Endpunkt ist eine APK, keine Store-Verteilung | Reicht für Prüfung und Tests | App Store / Play Store |
+| 11.11.2026 | Projekt allein fortführen, Scope und MVP-Linie unverändert | Teampartnerin fällt für das Semester aus; voller Scope bleibt Ziel, die MVP-Linie ist das Sicherheitsnetz | **Agenten-Vorschlag verworfen:** MVP-Linie für eine Person nach oben verschieben |
+| 20.11.2026 | Nur ein Supabase-Cloud-Projekt (Demo), kein eigenes Projekt für echte Nutzer | Für die Uni-Abgabe gibt es keine echten Nutzer; ein zweites Projekt kann später für Freunde angelegt werden | **Agenten-Vorschlag verworfen:** zwei Cloud-Projekte für dev und prod |
+| 25.11.2026 | Migrationen kommen nur über die GitHub-Integration beim Merge nach `main` in die Cloud | Die Cloud entspricht immer genau `main`; nur Code mit grüner CI erreicht die Demo | **Agenten-Vorschlag verworfen:** vor dem Merge manuell per `supabase db push` in die Cloud spielen und dort am Handy testen – die Cloud hätte ungemergte Migrationen enthalten können |
+| 25.11.2026 | Gemergte Migrationen werden nie geändert, Korrekturen nur als neue Migration | Repository und Cloud-Datenbank bleiben synchron | Migration anpassen und `db reset` – in der Cloud nicht möglich |
+| 25.11.2026 | Testen vor dem Merge lokal, Handy per USB über `adb reverse` | Keine Firewall-Regeln, keine wechselnden IP-Adressen, funktioniert auch am Handy-Hotspot und offline | Handy per WLAN (Firewall-Block-Regeln, Hotspot als öffentliches Netz); Supabase Pro mit Branching (ca. 25 $/Monat) |
+| 25.11.2026 | Zusätzliches Review jedes Pull Requests durch ein anderes KI-Modell mit frischem Kontext | Ersetzt teilweise das fehlende Partner-Review; übernommene und verworfene Hinweise werden im PR begründet | Nur Selbst-Review |
+| 20.11.2026 | Selbst-Review am Folgetag mit Checkliste (`.github/pull_request_template.md`) statt Partner-Review | Ein-Personen-Team | Review-Pflicht beibehalten – nicht mehr erfüllbar |
+| 20.11.2026 | `.gitattributes` erzwingt LF-Zeilenenden | Nach einem Rechnerwechsel zeigte Git 37 Dateien als geändert, die sich nur in den Zeilenenden unterschieden | `core.autocrlf` auf jedem Rechner einzeln einstellen |

@@ -8,7 +8,7 @@ Expo-spezifische Hinweise `AGENTS.md`.
 ## Git – verbindliche Regeln
 
 - **Niemals committen, pushen, mergen oder rebasen.** Das macht das Team
-  (Björn Bernhardt, Saskia Wengst) immer selbst. Auch nicht „nur kurz“ und
+  (Björn Bernhardt) immer selbst. Auch nicht „nur kurz“ und
   auch nicht auf Feature-Branches.
 - `main` ist geschützt; Code kommt nur über Pull Requests hinein.
 - Gearbeitet wird auf Branches `feature/<kurzname>`. Einen neuen Branch
@@ -29,6 +29,12 @@ endlicher Feed, keine Likes und keine Zahlen – healthy by design.
   verlässt sich auf die Datenbank.
 - **Schemaänderungen nur als Migration** in `supabase/migrations/`
   (`npx supabase migration new <name>`). Nie direkt im Dashboard ändern.
+- **Migrationen kommen nur über `main` in die Cloud.** Das einzige
+  Supabase-Cloud-Projekt bekommt neue Migrationen ausschließlich über die
+  GitHub-Integration beim Merge nach `main` – nie per `npx supabase db push`.
+  Entwickelt und getestet wird lokal (`npx supabase start`).
+- **Gemergte Migrationen nie ändern.** Korrekturen kommen als neue Migration.
+  Vor dem Merge darf eine Migration noch angepasst werden.
 - **Jede Tabelle hat RLS aktiviert.** Ohne Policy ist nichts lesbar.
 - **Geheime Einsortierung:** `connections` ist gerichtet (zwei Zeilen pro
   Freundschaft) und nur für `owner_id = auth.uid()` lesbar. Nichts darf
@@ -46,7 +52,8 @@ endlicher Feed, keine Likes und keine Zahlen – healthy by design.
 ## Tests
 
 - Fachregeln: pgTAP-Tests in `supabase/tests/*.test.sql`, ausgeführt mit
-  `npx supabase test db` gegen ein lokales Supabase (`npx supabase start`).
+  `npx supabase test db` – automatisch in der CI bei jedem Pull Request,
+  lokal optional per Docker (`npx supabase start`).
 - UI-Logik (z. B. Verblassen in der letzten Stunde): Jest.
 - Jedes Akzeptanzkriterium einer Story wird zu mindestens einem Test.
   Randfälle aus der Spezifikation werden explizit getestet.
@@ -57,13 +64,18 @@ Eine Story ist fertig, wenn:
 
 1. alle Akzeptanzkriterien erfüllt und als Tests umgesetzt sind (pgTAP für
    Fachregeln, Jest für UI-Logik),
-2. Lint, Jest und `supabase test db` lokal und in der CI grün sind,
+2. Lint, Typecheck und Jest lokal sowie alle Tests inkl. `supabase test db`
+   in der CI grün sind,
 3. Schemaänderungen ausschließlich als Migration in `supabase/migrations/`
    vorliegen,
 4. jede neue Tabelle RLS aktiviert hat und mindestens ein Test unberechtigten
    Zugriff prüft,
-5. der Code von der jeweils anderen Person gelesen wurde (Review per Pull
-   Request),
+5. der Pull Request mit der Checkliste aus `.github/pull_request_template.md`
+   selbst reviewt wurde, mit etwas Abstand, am besten am Folgetag, und
+   zusätzlich von einem anderen KI-Modell als dem, mit dem der Code entstanden
+   ist (frischer Kontext: nur Diff, Story/Spezifikation und diese Datei). Im
+   Pull Request steht, welche Hinweise übernommen oder verworfen wurden und
+   warum (Ein-Personen-Team seit 11.11.2026),
 6. wichtige Entscheidungen im Entscheidungsprotokoll (`docs/architektur.md`)
    und die Arbeit mit dem Agenten im Tagebuch (`docs/tagebuch.md`) stehen.
 

@@ -1,7 +1,7 @@
 # Projekt-Steckbrief: U social
 
-**Team:** Björn Bernhardt, Saskia Wengst
-**Stand:** 08.11.2026
+**Team:** Björn Bernhardt (bis 11.11.2026 gemeinsam mit Saskia Wengst)
+**Stand:** 20.11.2026
 
 ## Vision
 
@@ -54,7 +54,7 @@ Alle sind gleichberechtigt und teilen nur für ihre Freunde.
 | Direktnachrichten | |
 | Blockieren, Melden mit Hilfsangeboten, Ausblenden ab drei Meldungen | |
 | Admin-Seite (nur bei `is_admin = true`): freigeben, löschen, verwarnen, Konto löschen | |
-| Ausschließlich Dark Mode | |
+| Ausschließlich Dark Mode | Verteilung an Freunde und Produktivbetrieb – dafür später ein eigenes Supabase-Projekt |
 | Onboarding mit der Philosophie (niedrige Priorität) | |
 
 ## Kriterien-Check
@@ -62,8 +62,8 @@ Alle sind gleichberechtigt und teilen nur für ihre Freunde.
 | Kriterium | Wie erfüllt? |
 | --- | --- |
 | Persistente Daten | Supabase (Postgres) für Profile, Verbindungen, Posts, Kommentare, DMs und Meldungen; Supabase Storage für Bilder, Videos und Audio. Schema versioniert als Migrations im Repository. |
-| Testbare Domänenlogik: mindestens drei Fachregeln mit Randfällen | Die Regeln sind SQL-Funktionen, RLS-Policies und Trigger und werden mit pgTAP gegen ein lokales Supabase getestet: **(1) Sichtbarkeit:** Post sichtbar, wenn Betrachter beim Autor höchstens im gewählten Kreis steht, nicht blockiert ist, der Post nicht abgelaufen und nicht ausgeblendet ist (Randfälle: keine Verbindung, Kreis nachträglich geändert, eigener Post, Blockierung). **(2) Ablauf:** nur 24/72/168 h erlaubt, Ablauf = Erstellzeit + Dauer (Randfälle: genau auf der Grenze, ungültige Dauer). **(3) QR-Verbindung:** Token 30 s gültig und einmalig, keine Verbindung mit sich selbst oder bei Blockierung, keine doppelte Verbindung. **(4) Moderation:** ab drei Meldungen verschiedener Personen ausgeblendet, Mehrfachmeldung derselben Person zählt einmal, höchstens eine Verwarnung. |
-| Lauffähig: baut und testet in der CI, startet lokal mit einem dokumentierten Befehl | Expo-App startet lokal mit einem im README dokumentierten Befehl; GitHub Actions führt Lint, App-Tests und `supabase test db` aus; APK über EAS Build. |
+| Testbare Domänenlogik: mindestens drei Fachregeln mit Randfällen | Die Regeln sind SQL-Funktionen, RLS-Policies und Trigger und werden mit pgTAP in der CI gegen ein frisch gestartetes Supabase getestet (optional lokal per Docker): **(1) Sichtbarkeit:** Post sichtbar, wenn Betrachter beim Autor höchstens im gewählten Kreis steht, nicht blockiert ist, der Post nicht abgelaufen und nicht ausgeblendet ist (Randfälle: keine Verbindung, Kreis nachträglich geändert, eigener Post, Blockierung). **(2) Ablauf:** nur 24/72/168 h erlaubt, Ablauf = Erstellzeit + Dauer (Randfälle: genau auf der Grenze, ungültige Dauer). **(3) QR-Verbindung:** Token 30 s gültig und einmalig, keine Verbindung mit sich selbst oder bei Blockierung, keine doppelte Verbindung. **(4) Moderation:** ab drei Meldungen verschiedener Personen ausgeblendet, Mehrfachmeldung derselben Person zählt einmal, höchstens eine Verwarnung. |
+| Lauffähig: baut und testet in der CI, startet lokal mit einem dokumentierten Befehl | Expo-App startet lokal mit einem im README dokumentierten Befehl gegen ein lokales Supabase (Handy per USB); das Cloud-Projekt zeigt den Stand von `main`; GitHub Actions führt Lint, App-Tests und `supabase test db` aus; APK über EAS Build. |
 
 ## Risiken und offene Fragen
 
@@ -77,10 +77,25 @@ Alle sind gleichberechtigt und teilen nur für ihre Freunde.
 - **Video** ist aufwendig (Komprimierung in Expo) und belastet Speicher und
   Datenverkehr im Supabase Free Plan (1 GB Speicher, 5 GB Egress/Monat).
 - **Realtime für DMs** ist technisch der aufwendigste Teil.
-- **Lokale Tests brauchen Docker** (Docker Desktop unter Windows).
+- **Ein-Personen-Team:** Seit dem 11.11.2026 setzt Björn Bernhardt den vollen
+  Scope allein um. Die MVP-Linie bleibt das Sicherheitsnetz; ein
+  Partner-Review gibt es nicht mehr (Ersatz: Selbst-Review mit Checkliste).
+- **Nur ein Cloud-Projekt:** Es zeigt immer den Stand von `main` und dient
+  als Demo. Ein Fehler, der erst nach dem Merge auffällt, ist dort sichtbar,
+  bis eine Korrektur-Migration gemergt ist. Free-Projekte werden nach einer
+  Woche ohne Aktivität pausiert und müssen im Dashboard geweckt werden.
 - Repository liegt auf GitHub statt im Nordakademie-GitLab (mit dem Dozenten
   abgesprochen); ggf. späterer Umzug.
 
 ## Änderungen
 
 - 08.11.2026: Erste Fassung.
+- 11.11.2026: Saskia Wengst fällt für das restliche Semester aus. Björn
+  Bernhardt führt das Projekt nach Rücksprache mit dem Dozenten allein fort.
+  Scope und MVP-Linie bleiben unverändert; der große Scope steht als Risiko
+  oben.
+- 20.11.2026: Die Verteilung an Freunde ist nicht mehr Teil des Projekts
+  (siehe Scope). Es gibt nur noch ein Supabase-Cloud-Projekt für die Demo.
+- 25.11.2026: Entwickelt wird lokal (Docker, Handy per USB über `adb
+  reverse`); das Cloud-Projekt erhält Migrationen nur über die
+  GitHub-Integration beim Merge nach `main`.
