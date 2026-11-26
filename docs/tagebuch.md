@@ -89,3 +89,81 @@ GitHub-Runner ein komplettes Supabase startet.
 **Nächstes Mal:** Neue Projekte nicht in einen bestehenden Repo-Ordner
 kopieren, sondern vorher prüfen, was das Template mitbringt (hier: ein
 eigenes Git-Repo).
+
+---
+
+## Woche 5 bis 7
+
+### 11.11.2026 -- Teamänderung: allein weiter
+
+**Autor/in:** Björn Bernhardt
+
+**Story / Commit:** Dokumentation, Branch `feature/dev-setup`
+
+**An den Agenten gegeben:** Die Information, dass Saskia Wengst für das
+restliche Semester ausfällt, sowie Steckbrief, Backlog und Definition of Done.
+Agentenmodus mit Zugriff auf den Projektordner, Modell Claude Opus 5.5.
+
+**Ergebnis:** Der Agent schlug vor, die MVP-Linie für eine Person nach oben zu
+verschieben, und erinnerte daran, früh mit dem Dozenten zu sprechen.
+
+**Entscheidung:** Nach Rücksprache mit dem Dozenten mache ich allein weiter.
+Den Vorschlag, die MVP-Linie zu verschieben, habe ich verworfen: Der volle
+Scope bleibt mein Ziel, die bestehende MVP-Linie ist das Sicherheitsnetz. Das
+Partner-Review in der Definition of Done habe ich durch ein Selbst-Review mit
+Checkliste ersetzt (`.github/pull_request_template.md`).
+
+### 20.11.–25.11.2026 -- Entwicklungs-Setup neu gedacht
+
+**Autor/in:** Björn Bernhardt
+
+**Story / Commit:** Dokumentation und Setup, Branch `feature/dev-setup`
+
+**An den Agenten gegeben:** Mein Wunsch, nicht bei jedem Test lokal Supabase
+zu starten und mit der Windows-Firewall zu kämpfen, sondern direkt gegen die
+Cloud zu entwickeln. Später die Rahmenbedingung, dass ich oft nur mit dem
+Hotspot meines Handys unterwegs bin und nichts bezahlen will.
+
+**Ergebnis:** Über mehrere Schritte ist dieses Setup entstanden: Entwickelt und
+getestet wird lokal (Docker), das Handy hängt per USB-Kabel am Laptop und
+erreicht über `adb reverse` direkt `localhost`. Das eine Cloud-Projekt bekommt
+Migrationen nur über die GitHub-Integration beim Merge nach `main` und dient
+als Demo. Die App läuft so am Handy, `npm run check` und `npm run db:test`
+sind grün.
+
+**Entscheidung:** Mehrere Vorschläge des Agenten habe ich angepasst oder
+verworfen (Details im Entscheidungsprotokoll in `docs/architektur.md`):
+
+1. Der Agent schlug zwei Cloud-Projekte vor (dev und prod). Verworfen, weil
+   ich vorerst nur für die Uni entwickle und keine echten Nutzer habe.
+2. Danach schlug der Agent vor, Migrationen vor dem Merge per
+   `supabase db push` manuell in die Cloud zu spielen. Ich habe gefragt, warum
+   wir nicht die GitHub-Integration nutzen, sodass sich die Cloud nur ändert,
+   wenn Code wirklich auf `main` ist. Der Agent hat daraufhin die Vor- und
+   Nachteile gegenübergestellt und seinen Vorschlag zurückgenommen: Mit der
+   Integration entspricht die Cloud immer `main`, und ungeprüfte Migrationen
+   können sie nicht erreichen.
+3. Für das Testen am Handy vor dem Merge war Supabase Pro mit Branching eine
+   Option (ca. 25 $ im Monat) – verworfen wegen der Kosten. Statt das Handy
+   über WLAN anzubinden (Firewall-Regeln, am Hotspot zusätzlich ein
+   „öffentliches“ Netz und wechselnde IP-Adressen) nutze ich USB mit
+   `adb reverse`. Vorher habe ich mir erklären lassen, wie riskant
+   USB-Debugging auf dem Alltagshandy ist; ich schalte es nur während der
+   Entwicklung ein.
+
+Unterwegs aufgefallen und behoben:
+
+- Nach dem Wechsel auf einen neuen Laptop zeigte Git 37 geänderte Dateien. Der
+  Agent hat geprüft, dass sich nur die Zeilenenden unterschieden; eine
+  `.gitattributes` verhindert das jetzt.
+- `npm run db:push` traf zuerst das lokale statt des Cloud-Projekts, weil die
+  Supabase-CLI in Version 3 standardmäßig lokal arbeitet. Das habe ich an der
+  Fehlermeldung gemerkt (der Befehl ist inzwischen wieder entfernt).
+- Auf meinen Wunsch schreibt `npm run db:start` jetzt `.env.local` automatisch
+  (`scripts/write-env-local.mjs`), statt die Werte von Hand zu kopieren.
+- Ebenfalls auf meinen Wunsch gehört zur Selbst-Review-Checkliste jetzt ein
+  Review durch ein anderes KI-Modell mit frischem Kontext.
+
+**Nächstes Mal:** Rahmenbedingungen wie „oft unterwegs am Hotspot“ und „keine
+Kosten“ gleich am Anfang nennen. Der Agent hat das Setup dreimal umgeplant,
+weil diese Informationen erst nach und nach kamen.
